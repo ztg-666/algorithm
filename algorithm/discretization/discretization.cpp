@@ -1,58 +1,36 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-
-// 离散化函数，返回离散化后的数组和去重排序后的数组
-std::pair<std::vector<int>, std::vector<int>> discretize(const std::vector<int>& arr) {
-    // 步骤 1：收集数据并去重排序
-    std::vector<int> unique_arr = arr;
-    std::sort(unique_arr.begin(), unique_arr.end());
-    unique_arr.erase(std::unique(unique_arr.begin(), unique_arr.end()), unique_arr.end());
-
-    // 初始化离散化后的数组
-    std::vector<int> discrete_arr;
-    discrete_arr.reserve(arr.size()); // 预留空间以提高性能
-
-    // 步骤 2：映射
-    for (int num : arr) {
-        // 使用二分查找找到 num 在 unique_arr 中的位置
-        auto it = std::lower_bound(unique_arr.begin(), unique_arr.end(), num);
-        // 计算 num 在 unique_arr 中的索引位置
-        int pos = std::distance(unique_arr.begin(), it);
-        // 将索引位置添加到离散化后的数组中
-        discrete_arr.push_back(pos);
+// 对数组进行排序并去重，返回去重后的数组长度
+int sort(long nums[], int length) {
+    sort(nums, nums + length);
+    int size = 1;
+    for (int i = 1; i < length; i++) {
+        if (nums[i] != nums[size - 1]) {
+            nums[size++] = nums[i];
+        }
     }
-    // 返回离散化后的数组和去重排序后的数组
-    return {discrete_arr, unique_arr};
+    return size;
 }
 
-int main() {
-    // 定义一个测试数组
-    std::vector<int> arr = {100, 200, 100, 300, 400};
+// 在有序数组nums的前size个元素中查找值v的排名（1-based index）
+int rank1(long nums[], long v, int size) {
+    long ans = 0;
+    auto it = std::lower_bound(nums,nums+size, v);
+    // 计算 num 在 unique_arr 中的索引位置
+    ans = distance(nums, it);
+    return ans + 1;
+}
 
-    // 调用离散化函数对 arr 进行离散化处理
-    auto [discrete_arr, unique_arr] = discretize(arr);
+int sort(std::vector<long>& nums) {
+    std::sort(nums.begin(), nums.end());
+    nums.erase(unique(nums.begin(), nums.end()), nums.end());
+    return nums.size();
+}
 
-    // 输出原始数组
-
-    for (int num : arr) {
-        std::cout << num << " ";
-    }
-    std::cout << std::endl;
-
-    // 输出离散化后的数组
-
-    for (int num : discrete_arr) {
-        std::cout << num << " ";
-    }
-    std::cout << std::endl;
-
-    // 从离散化后的数组重新输出原来的数组
-    for (int pos : discrete_arr) {
-        std::cout << unique_arr[pos] << " ";
-    }
-    std::cout << std::endl;
-
-    // 返回 0 表示程序成功结束
-    return 0;
+// 在有序vector的前size个元素中查找值v的排名（1-based index）
+int rank1(const std::vector<long>& nums, long v, int size) {
+    int ans = 0;
+    // 使用二分查找找到 num 在 unique_arr 中的位置
+    auto it = std::lower_bound(nums.begin(), nums.end(), v);
+    // 计算 num 在 unique_arr 中的索引位置
+    ans = std::distance(nums.begin(), it);
+    return ans + 1;
 }
