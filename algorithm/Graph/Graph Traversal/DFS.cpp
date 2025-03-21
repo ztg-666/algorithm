@@ -49,3 +49,17 @@ void dfs(Node* node) {
     }
 }
 
+unordered_set<Node*> set2;
+void dfs(Node* node) {
+    if (node == nullptr) {
+        return;
+    }
+    cout << node->value;
+    set2.insert(node);
+    for (auto next : node->nexts) {
+        if (set2.find(next) == set2.end()) {
+            dfs(next);
+
+        }
+    }
+}
