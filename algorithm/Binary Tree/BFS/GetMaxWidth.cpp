@@ -69,3 +69,27 @@ int getMaxWidth(Node* head) {
     // 返回最大宽度
     return maxWidth;
 }
+
+// 每次处理一层的优化BFS方法，推荐
+int levelOrder2(TreeNode* root) {
+    int maxWidth = 0;
+    if (root != nullptr) { // 如果根节点不为空
+        TreeNode* queue[2001]; // 使用数组模拟队列，存储待处理的节点
+        int l = 0, r = 0; // 队列的左右指针，l表示队列头，r表示队列尾
+        queue[r++] = root; // 将根节点加入队列
+        while (l < r) { // 当队列不为空时
+            int size = r - l; // 当前层的节点数
+            maxWidth = max(maxWidth, size);
+            for (int i = 0; i < size; i++) { // 遍历当前层的所有节点
+                TreeNode* cur = queue[l++]; // 获取队列头部节点并弹出
+                if (cur->left != nullptr) { // 如果左子节点存在
+                    queue[r++] = cur->left; // 将左子节点加入队列
+                }
+                if (cur->right != nullptr) { // 如果右子节点存在
+                    queue[r++] = cur->right; // 将右子节点加入队列
+                }
+            }
+        }
+    }
+    return maxWidth; // 返回结果
+}
