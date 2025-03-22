@@ -1,39 +1,67 @@
-#include <bits/stdc++.h>
-using namespace std;
-class ReturnType {
-public:
-    bool isBalanced;    // 子树是否平衡
-    int height;         // 子树的高度
+#include<bits/stdc++.h>
 
-    // 构造函数，初始化子树的平衡状态和高度
-    ReturnType(bool isB, int hei) : isBalanced(isB), height(hei) {}
+// 定义二叉树节点结构体
+struct TreeNode {
+    int val;          // 节点的值
+    TreeNode* left;   // 指向左子节点的指针
+    TreeNode* right;  // 指向右子节点的指针
+    // 构造函数，初始化节点值和左右子节点指针
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 };
 
-// 递归函数，检查以节点 x 为根的子树是否平衡，并返回子树的状态信息
-ReturnType process(Node* x) {
-    // 如果节点 x 为空，返回一个表示平衡且高度为 0 的 ReturnType 对象
-    if (x == nullptr) {
-        return ReturnType(true, 0);
+// 全局变量，用于标记树是否平衡
+bool balance;
+
+// 计算树的高度，并检查树是否平衡
+// 一旦发现不平衡，返回什么高度已经不重要了
+int height(TreeNode* cur) {
+    // 如果树已经不平衡或者当前节点为空，返回高度0
+    if (!balance || cur == nullptr) {
+        return 0;
     }
-
-    // 递归地获取左子树的状态信息
-    ReturnType leftData = process(x->left);
-    // 递归地获取右子树的状态信息
-    ReturnType rightData = process(x->right);
-
-    // 计算当前节点的高度为左右子树高度的最大值加 1
-    int height = std::max(leftData.height, rightData.height) + 1;
-
-    // 判断当前节点是否平衡：左子树和右子树都平衡且左右子树高度差小于 2
-    bool isBalanced = leftData.isBalanced && rightData.isBalanced
-            && std::abs(leftData.height - rightData.height) < 2;
-
-    // 返回当前节点的状态信息
-    return ReturnType(isBalanced, height);
+    // 递归计算左子树的高度
+    int lh = height(cur->left);
+    // 递归计算右子树的高度
+    int rh = height(cur->right);
+    // 如果左右子树高度差大于1，标记树不平衡
+    if (abs(lh - rh) > 1) {
+        balance = false;
+    }
+    // 返回当前节点的高度
+    return std::max(lh, rh) + 1;
 }
 
-// 检查整棵树是否平衡
-bool isBalanced(Node* head) {
-    // 调用 process 函数检查以 head 为根的树是否平衡，并返回结果
-    return process(head).isBalanced;
+// 判断二叉树是否平衡
+bool isBalanced(TreeNode* root) {
+    // 每次判断开始时，设置balance为true
+    balance = true;
+    // 调用height函数计算树的高度并检查平衡性
+    height(root);
+    // 返回balance的值，表示树是否平衡
+    return balance;
+}
+void freeTree(TreeNode* root) {
+    if (!root) return; // 如果当前节点为空，直接返回
+    freeTree(root->left); // 递归释放左子树
+    freeTree(root->right); // 递归释放右子树
+    delete root; // 删除当前节点
+}
+// 主函数，用于测试isBalanced函数
+int main() {
+    // 创建一个示例二叉树
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+    root->left->left->left = new TreeNode(6);
+
+    // 检查二叉树是否平衡
+    if (isBalanced(root)) {
+        std::cout << "The tree is balanced." << std::endl;
+    } else {
+        std::cout << "The tree is not balanced." << std::endl;
+    }
+    freeTree(root);
+    return 0;
 }
