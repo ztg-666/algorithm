@@ -34,3 +34,20 @@ int rank1(const std::vector<long>& nums, long v, int size) {
     ans = std::distance(nums.begin(), it);
     return ans + 1;
 }
+
+int rank1(vector<ll>& nums, ll v, int size) {
+    int l = 0;
+    int r = size - 1;
+    int m, ans = 0;
+    while (l <= r) {
+        m = (l + r) / 2;
+        if (nums[m] >= v) {
+            ans = m;
+            r = m - 1;
+        }
+        else {
+            l = m + 1;
+        }
+    }
+    return ans + 1;
+}
